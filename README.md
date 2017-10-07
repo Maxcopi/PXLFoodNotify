@@ -3,7 +3,7 @@ Get a mail stating what food is being sold today at PXL Catering Campus Elfde Li
 
 Requires: Python 3.0+, selenium, BeautifulSoup
 
-Installation Linux Server:\n
+Installation Linux Server:
 pip install bs4
 pip install selenium
 brew install phantomjs
