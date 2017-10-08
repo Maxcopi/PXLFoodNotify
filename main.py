@@ -49,7 +49,6 @@ def getWeekMenu(url):
         # re.findall voert regex uit op de paragrafen binnen de div van een dag
         #\\xa0 is &nbsp na conversie wat een witregel is in de html, niet in list opnemen
         gerechten.append(dagEnMenus)
-        print(gerechten)
     return gerechten
 
 
