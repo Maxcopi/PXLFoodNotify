@@ -58,16 +58,16 @@ def convertListToText(listWeekMenu):
 
     for dagMenus in listWeekMenu:
         weekMenuText += dagMenus[0]
-        weekMenuText += "\n"
+        weekMenuText += "~"
         for count in range(1, len(dagMenus)):
             weekMenuText += dagMenus[count]
-            weekMenuText += "\n"
-        weekMenuText += "\n"
+            weekMenuText += "~"
+        weekMenuText += "@@@"
     return weekMenuText
 
 
 def writeTextToFile(text):
-    fileHandler = open("gerechten.txt", 'w')
+    fileHandler = open("gerechten.csv", 'w')
     for line in text:
         fileHandler.write(line)
     fileHandler.close()
@@ -78,7 +78,7 @@ def checkUpdated():
     import re
 
     try:
-        fileHandler = open("gerechten.txt", 'r')
+        fileHandler = open("gerechten.csv", 'r')
     except:
         return False
     currentDay = datetime.date.today()
@@ -90,7 +90,6 @@ def checkUpdated():
     date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
     # De eerste datum in de string omvormen tot een datetime object
     date = date + datetime.timedelta(days=5)
-    print(date)
     print(currentDay)
     if(date > currentDay):
         # datetime objects kunnen vergeleken worden
