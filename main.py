@@ -2,16 +2,18 @@
 def getWeekMenu(url):
 
     from bs4 import BeautifulSoup
-    import requests
     from selenium import webdriver
     from selenium.common.exceptions import NoSuchElementException
     from selenium.webdriver.common.keys import Keys
     from time import sleep
     import re
+    from sys import platform
 
     gerechten = []
-
-    browser = webdriver.PhantomJS("phantomjs-2.1.1-windows/bin/phantomjs.exe")
+    try:
+        browser = webdriver.PhantomJS("phantomjs-2.1.1-windows/bin/phantomjs.exe")
+    except:
+        browser = webdriver.PhantomJS()
 
     url = browser.get(url)
 
@@ -33,7 +35,10 @@ def getWeekMenu(url):
         dagEnMenus.append(re.findall("<h2.+>(.+)</h2>", dagMenu)[0])
         # voert regex uit op de dag en datum en neemt het eerste (en enigste resultaat)
         #[0] dient om het eerste object van de list die findall teruggeeft te selecteren.
-        menus = re.findall("<p>((?!\\xa0).+)</p>", dagMenu)
+        if(platform == "linux") or (platform == "linux2"):  # In linux is CR en LF gecombineerd
+            menus = re.findall("<p>((?!\\xc2).+)</p>", dagMenu)
+        else:
+            menus = re.findall("<p>((?!\\xa0).+)</p>", dagMenu)  # In Windows enkel LF in conversie
         extramenus = re.findall("(.+)<br", dagMenu)
         # Sommige gerechten zitten in een aparte paragraaf
         for menu in extramenus:
@@ -44,6 +49,7 @@ def getWeekMenu(url):
         # re.findall voert regex uit op de paragrafen binnen de div van een dag
         #\\xa0 is &nbsp na conversie wat een witregel is in de html, niet in list opnemen
         gerechten.append(dagEnMenus)
+        print(gerechten)
     return gerechten
 
 
@@ -61,7 +67,7 @@ def convertListToText(listWeekMenu):
 
 
 def writeTextToFile(text):
-    fileHandler = open("Gerechten.txt", 'w')
+    fileHandler = open("gerechten.txt", 'w')
     for line in text:
         fileHandler.write(line)
     fileHandler.close()
@@ -72,7 +78,7 @@ def checkUpdated():
     import re
 
     try:
-        fileHandler = open("Gerechten.txt", 'r')
+        fileHandler = open("gerechten.txt", 'r')
     except:
         return False
     currentDay = datetime.date.today()
